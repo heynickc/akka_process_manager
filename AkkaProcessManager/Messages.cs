@@ -8,7 +8,9 @@ using Akka.Util.Internal;
 
 // Yet, when designing full-fledged actor-based systems and integrating among them and legacy systems, it generally works out to your advantage to define a Canonical Message Model (333)
 // https://www.safaribooksonline.com/library/view/reactive-messaging-patterns/9780133846904/ch04.html#ch04
+
 namespace AkkaProcessManager {
+
     class QuoteLoanRate {
         public string TaxId { get; }
         public int Amount { get; }
