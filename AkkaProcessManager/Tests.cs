@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AkkaProcessManager {
-    public class ProcessManagerTests {
+    public class Tests {
     }
 }
