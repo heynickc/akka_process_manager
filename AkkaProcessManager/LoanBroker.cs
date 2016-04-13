@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Akka.Util.Internal;
-
-
-// Yet, when designing full-fledged actor-based systems and integrating among them and legacy systems, it generally works out to your advantage to define a Canonical Message Model (333)
-// https://www.safaribooksonline.com/library/view/reactive-messaging-patterns/9780133846904/ch04.html#ch04
+﻿using System.Collections.Generic;
+using Akka.Actor;
 
 namespace AkkaProcessManager {
 
-    // LoanBroker
     class QuoteBestLoanRate {
         public string TaxId { get; }
         public int Amount { get; }
@@ -60,22 +51,8 @@ namespace AkkaProcessManager {
         }
     }
 
-    // LoanRateQuote
-    public class StartLoanRateQuote {
-        public int ExpectedLoanRateQuotes { get; }
-
-        public StartLoanRateQuote(int expectedLoanRateQuotes) {
-            ExpectedLoanRateQuotes = expectedLoanRateQuotes;
-        }
-    }
-
-    public class LoanRateQuoteStarted {
-        public string LowRateQuoteId { get; }
-        public string TaxId { get; }
-
-        public LoanRateQuoteStarted(string lowRateQuoteId, string taxId) {
-            LowRateQuoteId = lowRateQuoteId;
-            TaxId = taxId;
-        }
+    public class LoanBroker : ReceiveActor {
+        private readonly IActorRef _creditBureau;
+        private readonly List<IActorRef> _banks;
     }
 }
