@@ -17,17 +17,17 @@ namespace AkkaProcessManager {
     }
 
     public class LoanRateQuote : ReceiveActor {
-        public string _loanRateQuoteId { get; private set; }
-        public string _taxId { get; private set; }
+        public string LoanRateQuoteId { get; }
+        public string TaxId { get; }
 
     }
 
     public class Bank : ReceiveActor {
-        public string BankId { get; private set; }
-        public double PrimeRate { get; private set; }
-        public double RatePremium { get; private set; }
-        public Random RandomDiscount { get; private set; }
-        public Random RandomQuoteId { get; private set; }
+        public string BankId { get; }
+        public double PrimeRate { get; }
+        public double RatePremium { get; }
+        public Random RandomDiscount { get; }
+        public Random RandomQuoteId { get; }
 
         public Bank(string bankId, double primeRate, double ratePremium) {
             BankId = bankId;
