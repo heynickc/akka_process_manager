@@ -11,12 +11,13 @@ using Akka.Util.Internal;
 
 namespace AkkaProcessManager {
 
-    class QuoteLoanRate {
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
+    // LoanBroker
+    class QuoteBestLoanRate {
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
 
-        public QuoteLoanRate(string taxId, int amount, int termInMonths) {
+        public QuoteBestLoanRate(string taxId, int amount, int termInMonths) {
             TaxId = taxId;
             Amount = amount;
             TermInMonths = termInMonths;
@@ -24,13 +25,13 @@ namespace AkkaProcessManager {
     }
 
     class BestLoanRateQuoted {
-        public string BankId { get; }
-        public string LoanRateQuoteId { get; }
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
-        public int CreditScore { get; }
-        public double InterestRate { get; }
+        public string BankId { get; private set; }
+        public string LoanRateQuoteId { get; private set; }
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
+        public int CreditScore { get; private set; }
+        public double InterestRate { get; private set; }
 
         public BestLoanRateQuoted(string bankId, string loanRateQuoteId, string taxId, int amount, int termInMonths, int creditScore, double interestRate) {
             BankId = bankId;
@@ -44,11 +45,11 @@ namespace AkkaProcessManager {
     }
 
     public class BestLoanRateDenied {
-        public string LoanRateQuoteId { get; }
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
-        public int CreditScore { get; }
+        public string LoanRateQuoteId { get; private set; }
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
+        public int CreditScore { get; private set; }
 
         public BestLoanRateDenied(string loanRateQuoteId, string taxId, int amount, int termInMonths, int creditScore) {
             LoanRateQuoteId = loanRateQuoteId;
@@ -56,6 +57,25 @@ namespace AkkaProcessManager {
             Amount = amount;
             TermInMonths = termInMonths;
             CreditScore = creditScore;
+        }
+    }
+
+    // LoanRateQuote
+    public class StartLoanRateQuote {
+        public int ExpectedLoanRateQuotes { get; private set; }
+
+        public StartLoanRateQuote(int expectedLoanRateQuotes) {
+            ExpectedLoanRateQuotes = expectedLoanRateQuotes;
+        }
+    }
+
+    public class LoanRateQuoteStarted {
+        public string LowRateQuoteId { get; private set; }
+        public string TaxId { get; private set; }
+
+        public LoanRateQuoteStarted(string lowRateQuoteId, string taxId) {
+            LowRateQuoteId = lowRateQuoteId;
+            TaxId = taxId;
         }
     }
 }
