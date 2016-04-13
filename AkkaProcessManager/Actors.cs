@@ -27,7 +27,7 @@ namespace AkkaProcessManager {
             return _primeRate + _ratePremium + ((months / 12.0) / 10.0) - creditScoreDiscount;
         }
 
-        private void QuoteLoanRateHandler(QuoteLoanRate quoteLoanRate) {
+        private void QuoteLoanRateHandler(QuoteBestLoanRate quoteBestLoanRate) {
             
         }
     }
