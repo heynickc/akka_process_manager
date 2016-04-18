@@ -100,5 +100,44 @@ namespace AkkaProcessManager {
                     message.TermInMonths));
             }
         }
+
+        private void LoanRateBestQuoteFilledHandler(LoanRateBestQuoteFilled message) {
+            _logger.Info("LoanBroker recieved LoanRateBestQuoteFilled message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            StopProcess(message.LoanRateQuoteId);
+            var best = new BestLoanRateQuoted(
+                message.BestBankLoanRateQuote.BankId,
+                message.LoanRateQuoteId,
+                message.TaxId,
+                message.Amount,
+                message.TermInMonths,
+                message.CreditScore,
+                message.BestBankLoanRateQuote.InterestRate);
+            _logger.Info("Would be sent to the original requester loanRateQuoteId: {0}", best.LoanRateQuoteId);
+        }
+
+        private void LoanRateQuoteRecordedHandler(LoanRateQuoteRecorded message) {
+            _logger.Info("LoanBroker recieved LoanRateQuoteRecorded message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+        }
+
+        private void LoanRateQuoteStartedHandler(LoanRateQuoteStarted message) {
+            _logger.Info("LoanBroker recieved LoanRateQuoteStarted message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _creditBureau.Tell(new CheckCredit(
+                message.LoanRateQuoteId,
+                message.TaxId));
+        }
+
+        private void LoanRateQuoteTerminatedHandler(LoanRateQuoteTerminated message) {
+            _logger.Info("LoanBroker recieved LoanRateQuoteTerminated message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            StopProcess(message.LoanRateQuoteId);
+        }
+
+        private void ProcessStartedHandler(ProcessStarted message) {
+            _logger.Info("LoanBroker recieved ProcessStarted message");
+            message.Process.Tell(new StartLoanRateQuote(_banks.Count));
+        }
+
+        private void ProcessStoppedHandler(ProcessStopped message) {
+            _logger.Info("LoanBroker recieved ProcessStopped message");
+        }
     }
 }

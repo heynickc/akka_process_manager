@@ -11,11 +11,11 @@ namespace AkkaProcessManager {
     }
 
     public class LoanRateQuoteStarted {
-        public string LowRateQuoteId { get; }
+        public string LoanRateQuoteId { get; }
         public string TaxId { get; }
 
-        public LoanRateQuoteStarted(string lowRateQuoteId, string taxId) {
-            LowRateQuoteId = lowRateQuoteId;
+        public LoanRateQuoteStarted(string loanRateQuoteId, string taxId) {
+            LoanRateQuoteId = loanRateQuoteId;
             TaxId = taxId;
         }
     }
@@ -101,17 +101,19 @@ namespace AkkaProcessManager {
         }
     }
 
-    public class LoanRateBestQuoteFiled {
+    public class LoanRateBestQuoteFilled {
         public string LoanRateQuoteId { get; }
         public string TaxId { get; }
         public int Amount { get; }
+        public int TermInMonths { get; }
         public int CreditScore { get; }
         public BankLoanRateQuote BestBankLoanRateQuote { get; }
 
-        public LoanRateBestQuoteFiled(string loanRateQuoteId, string taxId, int amount, int creditScore, BankLoanRateQuote bestBankLoanRateQuote) {
+        public LoanRateBestQuoteFilled(string loanRateQuoteId, string taxId, int amount, int termInMonths, int creditScore, BankLoanRateQuote bestBankLoanRateQuote) {
             LoanRateQuoteId = loanRateQuoteId;
             TaxId = taxId;
             Amount = amount;
+            TermInMonths = termInMonths;
             CreditScore = creditScore;
             BestBankLoanRateQuote = bestBankLoanRateQuote;
         }
