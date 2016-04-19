@@ -117,6 +117,8 @@ namespace AkkaProcessManager {
 
         private void LoanRateQuoteRecordedHandler(LoanRateQuoteRecorded message) {
             _logger.Info("LoanBroker recieved LoanRateQuoteRecorded message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+
+            // Other processing
         }
 
         private void LoanRateQuoteStartedHandler(LoanRateQuoteStarted message) {
@@ -138,6 +140,7 @@ namespace AkkaProcessManager {
 
         private void ProcessStoppedHandler(ProcessStopped message) {
             _logger.Info("LoanBroker recieved ProcessStopped message");
+            Context.Stop(message.Process);
         }
     }
 }
