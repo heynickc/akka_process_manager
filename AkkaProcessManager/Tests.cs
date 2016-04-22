@@ -23,7 +23,9 @@ namespace AkkaProcessManager {
             var bank1 = Sys.ActorOf(Props.Create(() => new Bank("bank1", 2.75, 0.30)), "bank1");
             var bank2 = Sys.ActorOf(Props.Create(() => new Bank("bank2", 2.73, 0.31)), "bank2");
             var bank3 = Sys.ActorOf(Props.Create(() => new Bank("bank3", 2.80, 0.29)), "bank3");
-            var loanBroker = Sys.ActorOf(Props.Create(() => new LoanBroker()), "loanBroker");
+            var loanBroker = 
+                Sys.ActorOf(
+                    Props.Create(() => new LoanBroker(creditBureau, new List<IActorRef>() { bank1, bank2, bank3 })), "loanBroker");
 
             var creditBureauPath = ActorSelection(@"/user/creditBureau")
                 .ResolveOne(TimeSpan.FromSeconds(3))

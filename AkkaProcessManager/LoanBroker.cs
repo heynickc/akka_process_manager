@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Akka.Actor;
 using Akka.Event;
 
 namespace AkkaProcessManager {
 
     class QuoteBestLoanRate {
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
 
         public QuoteBestLoanRate(string taxId, int amount, int termInMonths) {
             TaxId = taxId;
@@ -17,13 +18,13 @@ namespace AkkaProcessManager {
     }
 
     class BestLoanRateQuoted {
-        public string BankId { get; }
-        public string LoanRateQuoteId { get; }
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
-        public int CreditScore { get; }
-        public double InterestRate { get; }
+        public string BankId { get; private set; }
+        public string LoanRateQuoteId { get; private set; }
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
+        public int CreditScore { get; private set; }
+        public double InterestRate { get; private set; }
 
         public BestLoanRateQuoted(string bankId, string loanRateQuoteId, string taxId, int amount, int termInMonths, int creditScore, double interestRate) {
             BankId = bankId;
@@ -37,11 +38,11 @@ namespace AkkaProcessManager {
     }
 
     public class BestLoanRateDenied {
-        public string LoanRateQuoteId { get; }
-        public string TaxId { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
-        public int CreditScore { get; }
+        public string LoanRateQuoteId { get; private set; }
+        public string TaxId { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
+        public int CreditScore { get; private set; }
 
         public BestLoanRateDenied(string loanRateQuoteId, string taxId, int amount, int termInMonths, int creditScore) {
             LoanRateQuoteId = loanRateQuoteId;
@@ -56,8 +57,10 @@ namespace AkkaProcessManager {
         private readonly IActorRef _creditBureau;
         private readonly List<IActorRef> _banks;
         private readonly ILoggingAdapter _logger = Context.GetLogger();
-        public LoanBroker() {
 
+        public LoanBroker(IActorRef creditBureau, List<IActorRef> banks) {
+            _creditBureau = creditBureau;
+            _banks = banks;
         }
 
         private void BankLoanRateQuotedHandler(BankLoanRateQuoted message) {
@@ -141,6 +144,19 @@ namespace AkkaProcessManager {
         private void ProcessStoppedHandler(ProcessStopped message) {
             _logger.Info("LoanBroker recieved ProcessStopped message");
             Context.Stop(message.Process);
+        }
+
+        private void QuoteBestLoanRateHandler(QuoteBestLoanRate message) {
+            var loanRateQuoteId = Guid.NewGuid().ToString();
+            _logger.Info("Starting: " + message + " for Id: " + loanRateQuoteId);
+            IActorRef loanRateQuote = Context.ActorOf(
+                Props.Create(() => new LoanRateQuote(
+                    loanRateQuoteId,
+                    message.TaxId,
+                    message.Amount,
+                    message.TermInMonths,
+                    Self)));
+            StartProcess(loanRateQuoteId, loanRateQuote);
         }
     }
 }

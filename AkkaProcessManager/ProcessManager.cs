@@ -5,8 +5,8 @@ using Newtonsoft.Json.Bson;
 namespace AkkaProcessManager {
 
     public class ProcessStarted {
-        public string ProcessId { get;  }
-        public IActorRef Process { get;  }
+        public string ProcessId { get; private set; }
+        public IActorRef Process { get; private set; }
 
         public ProcessStarted(string processId, IActorRef process) {
             ProcessId = processId;
@@ -15,8 +15,8 @@ namespace AkkaProcessManager {
     }
 
     public class ProcessStopped {
-        public string ProcessId { get; }
-        public IActorRef Process { get; }
+        public string ProcessId { get; private set; }
+        public IActorRef Process { get; private set; }
 
         public ProcessStopped(string processId, IActorRef process) {
             ProcessId = processId;

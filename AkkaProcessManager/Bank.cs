@@ -4,11 +4,11 @@ using Akka.Actor;
 namespace AkkaProcessManager {
 
     public class QuoteLoanRate {
-        public string LoadQuoteReferenceId { get; }
-        public string TaxId { get; }
-        public int CreditScore { get; }
-        public int Amount { get; }
-        public int TermInMonths { get; }
+        public string LoadQuoteReferenceId { get; private set; }
+        public string TaxId { get; private set; }
+        public int CreditScore { get; private set; }
+        public int Amount { get; private set; }
+        public int TermInMonths { get; private set; }
 
         public QuoteLoanRate(string loadQuoteReferenceId, string taxId, int creditScore, int amount, int termInMonths) {
             LoadQuoteReferenceId = loadQuoteReferenceId;
@@ -20,11 +20,11 @@ namespace AkkaProcessManager {
     }
 
     public class BankLoanRateQuoted {
-        public string BankId { get; }
-        public string BankLoanRateQuoteId { get; }
-        public string LoanQuoteReferenceId { get; }
-        public string TaxId { get; }
-        public double InterestRate { get; }
+        public string BankId { get; private set; }
+        public string BankLoanRateQuoteId { get; private set; }
+        public string LoanQuoteReferenceId { get; private set; }
+        public string TaxId { get; private set; }
+        public double InterestRate { get; private set; }
 
         public BankLoanRateQuoted(string bankId, string bankLoanRateQuoteId, string loanQuoteReferenceId, string taxId, double interestRate) {
             BankId = bankId;
@@ -36,11 +36,11 @@ namespace AkkaProcessManager {
     }
 
     public class Bank : ReceiveActor {
-        public string BankId { get; }
-        public double PrimeRate { get; }
-        public double RatePremium { get; }
-        public Random RandomDiscount { get; }
-        public Random RandomQuoteId { get; }
+        public string BankId { get; private set; }
+        public double PrimeRate { get; private set; }
+        public double RatePremium { get; private set; }
+        public Random RandomDiscount { get; private set; }
+        public Random RandomQuoteId { get; private set; }
 
         public Bank(string bankId, double primeRate, double ratePremium) {
             BankId = bankId;

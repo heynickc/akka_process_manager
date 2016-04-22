@@ -7,8 +7,8 @@ using Akka.Actor;
 
 namespace AkkaProcessManager {
     public class CheckCredit {
-        public string CreditProcessReferenceId { get; }
-        public string TaxId { get; }
+        public string CreditProcessReferenceId { get; private set; }
+        public string TaxId { get; private set; }
 
         public CheckCredit(string creditProcessReferenceId, string taxId) {
             CreditProcessReferenceId = creditProcessReferenceId;
