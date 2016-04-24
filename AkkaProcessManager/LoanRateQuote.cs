@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Schema;
 using Akka.Actor;
-using Newtonsoft.Json.Bson;
 
 namespace AkkaProcessManager {
 
