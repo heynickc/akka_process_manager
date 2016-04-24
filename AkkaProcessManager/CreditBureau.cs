@@ -38,8 +38,7 @@ namespace AkkaProcessManager {
 
         public CreditBureau() {
             Receive<CheckCredit>(
-                checkCredit => 
-                    CheckCreditHandler(checkCredit));
+                message => CheckCreditHandler(message));
         }
 
         public void CheckCreditHandler(CheckCredit message) {

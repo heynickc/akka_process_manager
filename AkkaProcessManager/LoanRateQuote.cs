@@ -153,14 +153,11 @@ namespace AkkaProcessManager {
             this._loanBroker = loanBroker;
 
             Receive<StartLoanRateQuote>(
-                startLoanRateQuote =>
-                    StartLoanRateQuoteHandler(startLoanRateQuote));
+                message => StartLoanRateQuoteHandler(message));
             Receive<EstablishCreditScoreForLoanRateQuote>(
-                establishCreditScoreForLoanRateQuote =>
-                    EstablishCreditScoreForLoanRateQuoteHandler(establishCreditScoreForLoanRateQuote));
+                message => EstablishCreditScoreForLoanRateQuoteHandler(message));
             Receive<RecordLoanRateQuote>(
-                recordLoanRateQuote =>
-                    RecordLoanRateQuoteHandler(recordLoanRateQuote));
+                message => RecordLoanRateQuoteHandler(message));
         }
 
         private void StartLoanRateQuoteHandler(StartLoanRateQuote message) {

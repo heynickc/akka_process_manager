@@ -64,38 +64,27 @@ namespace AkkaProcessManager {
             _banks = banks;
 
             Receive<BankLoanRateQuoted>(
-                bankLoanRateQuoted => 
-                    BankLoanRateQuotedHandler(bankLoanRateQuoted));
+                message => BankLoanRateQuotedHandler(message));
             Receive<CreditChecked>(
-                creditChecked => 
-                    CreditCheckedHandler(creditChecked));
+                message => CreditCheckedHandler(message));
             Receive<CreditScoreForLoanRateQuoteDenied>(
-                creditScoreForLoanRateQuoteDenied => 
-                    CreditScoreForLoanRateQuoteDeniedHandler(creditScoreForLoanRateQuoteDenied));
+                message => CreditScoreForLoanRateQuoteDeniedHandler(message));
             Receive<CreditScoreForLoanRateQuoteEstablished>(
-                creditScoreForLoanRateQuoteEstablished =>
-                    CreditScoreForLoanRateQuoteEstablishedHandler(creditScoreForLoanRateQuoteEstablished));
+                message => CreditScoreForLoanRateQuoteEstablishedHandler(message));
             Receive<LoanRateBestQuoteFilled>(
-                loanRateBestQuoteFilled => 
-                    LoanRateBestQuoteFilledHandler(loanRateBestQuoteFilled));
+                message => LoanRateBestQuoteFilledHandler(message));
             Receive<LoanRateQuoteRecorded>(
-                loanRateQuoteRecorded => 
-                    LoanRateQuoteRecordedHandler(loanRateQuoteRecorded));
+                message => LoanRateQuoteRecordedHandler(message));
             Receive<LoanRateQuoteStarted>(
-                loanRateQuoteStarted =>
-                    LoanRateQuoteStartedHandler(loanRateQuoteStarted));
+                message => LoanRateQuoteStartedHandler(message));
             Receive<LoanRateQuoteTerminated>(
-                loanRateQuoteTerminated =>
-                    LoanRateQuoteTerminatedHandler(loanRateQuoteTerminated));
+                message => LoanRateQuoteTerminatedHandler(message));
             Receive<ProcessStarted>(
-                processStarted =>
-                    ProcessStartedHandler(processStarted));
+                message => ProcessStartedHandler(message));
             Receive<ProcessStopped>(
-                processStopped => 
-                    ProcessStoppedHandler(processStopped));
+                message => ProcessStoppedHandler(message));
             Receive<QuoteBestLoanRate>(
-                quoteBestLoanRate =>
-                    QuoteBestLoanRateHandler(quoteBestLoanRate));
+                message => QuoteBestLoanRateHandler(message));
         }
 
         private void BankLoanRateQuotedHandler(BankLoanRateQuoted message) {

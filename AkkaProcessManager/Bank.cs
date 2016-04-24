@@ -48,8 +48,7 @@ namespace AkkaProcessManager {
             _ratePremium = ratePremium;
 
             Receive<QuoteLoanRate>(
-                quoteLoanRate => 
-                    QuoteLoanRateHandler(quoteLoanRate));
+                message => QuoteLoanRateHandler(message));
         }
 
         private void QuoteLoanRateHandler(QuoteLoanRate message) {
