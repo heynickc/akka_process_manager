@@ -62,6 +62,40 @@ namespace AkkaProcessManager {
         public LoanBroker(IActorRef creditBureau, List<IActorRef> banks) {
             _creditBureau = creditBureau;
             _banks = banks;
+
+            Receive<BankLoanRateQuoted>(
+                bankLoanRateQuoted => 
+                    BankLoanRateQuotedHandler(bankLoanRateQuoted));
+            Receive<CreditChecked>(
+                creditChecked => 
+                    CreditCheckedHandler(creditChecked));
+            Receive<CreditScoreForLoanRateQuoteDenied>(
+                creditScoreForLoanRateQuoteDenied => 
+                    CreditScoreForLoanRateQuoteDeniedHandler(creditScoreForLoanRateQuoteDenied));
+            Receive<CreditScoreForLoanRateQuoteEstablished>(
+                creditScoreForLoanRateQuoteEstablished =>
+                    CreditScoreForLoanRateQuoteEstablishedHandler(creditScoreForLoanRateQuoteEstablished));
+            Receive<LoanRateBestQuoteFilled>(
+                loanRateBestQuoteFilled => 
+                    LoanRateBestQuoteFilledHandler(loanRateBestQuoteFilled));
+            Receive<LoanRateQuoteRecorded>(
+                loanRateQuoteRecorded => 
+                    LoanRateQuoteRecordedHandler(loanRateQuoteRecorded));
+            Receive<LoanRateQuoteStarted>(
+                loanRateQuoteStarted =>
+                    LoanRateQuoteStartedHandler(loanRateQuoteStarted));
+            Receive<LoanRateQuoteTerminated>(
+                loanRateQuoteTerminated =>
+                    LoanRateQuoteTerminatedHandler(loanRateQuoteTerminated));
+            Receive<ProcessStarted>(
+                processStarted =>
+                    ProcessStartedHandler(processStarted));
+            Receive<ProcessStopped>(
+                processStopped => 
+                    ProcessStoppedHandler(processStopped));
+            Receive<QuoteBestLoanRate>(
+                quoteBestLoanRate =>
+                    QuoteBestLoanRateHandler(quoteBestLoanRate));
         }
 
         private void BankLoanRateQuotedHandler(BankLoanRateQuoted message) {

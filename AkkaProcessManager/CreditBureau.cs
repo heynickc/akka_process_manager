@@ -36,6 +36,12 @@ namespace AkkaProcessManager {
 
         private readonly ILoggingAdapter _logger = Context.GetLogger();
 
+        public CreditBureau() {
+            Receive<CheckCredit>(
+                checkCredit => 
+                    CheckCreditHandler(checkCredit));
+        }
+
         public void CheckCreditHandler(CheckCredit message) {
             _logger.Info("CreditBureau recieved CheckCredit message: " + message);
             int range = _creditRanges[_randomCreditRangeGenerator.Next(5)];

@@ -151,6 +151,16 @@ namespace AkkaProcessManager {
             this._amount = amount;
             this._termInMonths = termInMonths;
             this._loanBroker = loanBroker;
+
+            Receive<StartLoanRateQuote>(
+                startLoanRateQuote =>
+                    StartLoanRateQuoteHandler(startLoanRateQuote));
+            Receive<EstablishCreditScoreForLoanRateQuote>(
+                establishCreditScoreForLoanRateQuote =>
+                    EstablishCreditScoreForLoanRateQuoteHandler(establishCreditScoreForLoanRateQuote));
+            Receive<RecordLoanRateQuote>(
+                recordLoanRateQuote =>
+                    RecordLoanRateQuoteHandler(recordLoanRateQuote));
         }
 
         private void StartLoanRateQuoteHandler(StartLoanRateQuote message) {

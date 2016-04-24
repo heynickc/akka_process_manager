@@ -46,11 +46,10 @@ namespace AkkaProcessManager {
             _bankId = bankId;
             _primeRate = primeRate;
             _ratePremium = ratePremium;
-        }
 
-        private double calculateInterestRate(double amount, double months, double creditScore) {
-            var creditScoreDiscount = creditScore / 100.0 / 10.0 - (_randomDiscount.Next(5) * 0.05);
-            return _primeRate + _ratePremium + ((months / 12.0) / 10.0) - creditScoreDiscount;
+            Receive<QuoteLoanRate>(
+                quoteLoanRate => 
+                    QuoteLoanRateHandler(quoteLoanRate));
         }
 
         private void QuoteLoanRateHandler(QuoteLoanRate message) {
@@ -59,7 +58,7 @@ namespace AkkaProcessManager {
                     (double) message.Amount,
                     (double) message.TermInMonths,
                     (double) message.CreditScore);
-            var quoted = 
+            var quoted =
                 new BankLoanRateQuoted(
                     this._bankId,
                     this._randomQuoteId.Next(1000).ToString(),
@@ -70,8 +69,8 @@ namespace AkkaProcessManager {
         }
 
         private double CalculateInterestRate(double amount, double months, double crediScore) {
-            var creditScoreDiscount = crediScore/100.0/10.0 - (this._randomDiscount.Next(5)*0.05);
-            return _primeRate + _ratePremium + ((months/12.0)/10.0) - creditScoreDiscount;
+            var creditScoreDiscount = crediScore / 100.0 / 10.0 - (this._randomDiscount.Next(5) * 0.05);
+            return _primeRate + _ratePremium + ((months / 12.0) / 10.0) - creditScoreDiscount;
         }
     }
 }
