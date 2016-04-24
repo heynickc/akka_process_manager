@@ -29,7 +29,7 @@ namespace AkkaProcessManager {
         }
     }
 
-    class CreditBureau : ReceiveActor {
+    public class CreditBureau : ReceiveActor {
         private int[] _creditRanges = new int[] { 300, 400, 500, 600, 700 };
         private Random _randomCreditRangeGenerator = new Random();
         private Random _randomCreditScoreGenerator = new Random();

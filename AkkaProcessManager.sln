@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaProcessManager", "AkkaProcessManager\AkkaProcessManager.csproj", "{3F0879B9-CBC6-4269-BBC5-5F359DE4C53D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaProcessManager.ConsoleApp", "AkkaProcessManagerConsoleApp\AkkaProcessManager.ConsoleApp.csproj", "{44739E69-E8D2-4A56-AA61-566B71DEE134}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaProcessManager.Tests", "AkkaProcessManager.Tests\AkkaProcessManager.Tests.csproj", "{34599E37-E057-4A38-B237-FAD856C7DFCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{3F0879B9-CBC6-4269-BBC5-5F359DE4C53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F0879B9-CBC6-4269-BBC5-5F359DE4C53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F0879B9-CBC6-4269-BBC5-5F359DE4C53D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44739E69-E8D2-4A56-AA61-566B71DEE134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44739E69-E8D2-4A56-AA61-566B71DEE134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44739E69-E8D2-4A56-AA61-566B71DEE134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44739E69-E8D2-4A56-AA61-566B71DEE134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34599E37-E057-4A38-B237-FAD856C7DFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34599E37-E057-4A38-B237-FAD856C7DFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34599E37-E057-4A38-B237-FAD856C7DFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34599E37-E057-4A38-B237-FAD856C7DFCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
