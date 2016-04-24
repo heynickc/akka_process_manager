@@ -56,6 +56,7 @@ namespace AkkaProcessManager {
     public class LoanBroker : ProcessManager {
         private readonly IActorRef _creditBureau;
         private readonly List<IActorRef> _banks;
+
         private readonly ILoggingAdapter _logger = Context.GetLogger();
 
         public LoanBroker(IActorRef creditBureau, List<IActorRef> banks) {

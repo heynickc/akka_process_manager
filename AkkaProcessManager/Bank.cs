@@ -36,28 +36,42 @@ namespace AkkaProcessManager {
     }
 
     public class Bank : ReceiveActor {
-        public string BankId { get; private set; }
-        public double PrimeRate { get; private set; }
-        public double RatePremium { get; private set; }
-        public Random RandomDiscount { get; private set; }
-        public Random RandomQuoteId { get; private set; }
+        private string _bankId;
+        private double _primeRate;
+        private double _ratePremium;
+        private Random _randomQuoteId = new Random();
+        public Random _randomDiscount = new Random();
 
         public Bank(string bankId, double primeRate, double ratePremium) {
-            BankId = bankId;
-            PrimeRate = primeRate;
-            RatePremium = ratePremium;
-            RandomDiscount = new Random();
-            RandomQuoteId = new Random();
+            _bankId = bankId;
+            _primeRate = primeRate;
+            _ratePremium = ratePremium;
         }
 
         private double calculateInterestRate(double amount, double months, double creditScore) {
-            var creditScoreDiscount = creditScore / 100.0 / 10.0 - (RandomDiscount.Next(5) * 0.05);
-            return PrimeRate + RatePremium + ((months / 12.0) / 10.0) - creditScoreDiscount;
+            var creditScoreDiscount = creditScore / 100.0 / 10.0 - (_randomDiscount.Next(5) * 0.05);
+            return _primeRate + _ratePremium + ((months / 12.0) / 10.0) - creditScoreDiscount;
         }
 
-        private void QuoteLoanRateHandler(QuoteLoanRate quoteLoanRate) {
-            
+        private void QuoteLoanRateHandler(QuoteLoanRate message) {
+            var interestRate =
+                CalculateInterestRate(
+                    (double) message.Amount,
+                    (double) message.TermInMonths,
+                    (double) message.CreditScore);
+            var quoted = 
+                new BankLoanRateQuoted(
+                    this._bankId,
+                    this._randomQuoteId.Next(1000).ToString(),
+                    message.LoadQuoteReferenceId,
+                    message.TaxId,
+                    interestRate);
+            Sender.Tell(quoted);
+        }
+
+        private double CalculateInterestRate(double amount, double months, double crediScore) {
+            var creditScoreDiscount = crediScore/100.0/10.0 - (this._randomDiscount.Next(5)*0.05);
+            return _primeRate + _ratePremium + ((months/12.0)/10.0) - creditScoreDiscount;
         }
     }
-
 }
