@@ -75,8 +75,8 @@ namespace AkkaProcessManager {
             _logger.Info("LoanBroker recieved CreditChecked message for creditProcessingReferenceId: {0}", message.CreditProcessingReferenceId);
             ProcessOf(message.CreditProcessingReferenceId).Tell(
                 new EstablishCreditScoreForLoanRateQuote(message.CreditProcessingReferenceId,
-                message.TaxId,
-                message.Score));
+                    message.TaxId,
+                    message.Score));
         }
 
         private void CreditScoreForLoanRateQuoteDeniedHandler(CreditScoreForLoanRateQuoteDenied message) {

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Schema;
 using Akka.Actor;
+using Newtonsoft.Json.Bson;
 
 namespace AkkaProcessManager {
 
@@ -149,6 +151,74 @@ namespace AkkaProcessManager {
             this._amount = amount;
             this._termInMonths = termInMonths;
             this._loanBroker = loanBroker;
+        }
+
+        private void StartLoanRateQuoteHandler(StartLoanRateQuote message) {
+            _expectedLoanRateQuotes = message.ExpectedLoanRateQuotes;
+            _loanBroker.Tell(
+                new LoanRateQuoteStarted(
+                    _loanRateQuoteId,
+                    _taxId));
+        }
+
+        private void EstablishCreditScoreForLoanRateQuoteHandler(EstablishCreditScoreForLoanRateQuote message) {
+            _creditRatingScore = message.Score;
+            if (QuotableCreditScore(_creditRatingScore)) {
+                _loanBroker.Tell(
+                    new CreditScoreForLoanRateQuoteEstablished(
+                        _loanRateQuoteId,
+                        _taxId,
+                        _creditRatingScore,
+                        _amount,
+                        _termInMonths));
+            }
+            else {
+                _loanBroker.Tell(
+                    new CreditScoreForLoanRateQuoteDenied(
+                        _loanRateQuoteId,
+                        _taxId,
+                        _amount,
+                        _termInMonths,
+                        _creditRatingScore));
+            }
+        }
+
+        private void RecordLoanRateQuoteHandler(RecordLoanRateQuote message) {
+            var bankLoanRateQuote = 
+                new BankLoanRateQuote(
+                    message.BankId,
+                    message.BankLoanRateQuoteId,
+                    message.InterestRate);
+            _bankLoanRateQuotes.Add(bankLoanRateQuote);
+            _loanBroker.Tell(
+                new LoanRateQuoteRecorded(
+                    _loanRateQuoteId,
+                    _taxId,
+                    bankLoanRateQuote));
+            if (_bankLoanRateQuotes.Count >= _expectedLoanRateQuotes) {
+                _loanBroker.Tell(
+                    new LoanRateBestQuoteFilled(
+                        _loanRateQuoteId,
+                        _taxId,
+                        _amount,
+                        _termInMonths,
+                        _creditRatingScore,
+                        BestBankLoanRateQuote()));
+            }
+        }
+
+        private bool QuotableCreditScore(int score) {
+            return score > 399;
+        }
+
+        private BankLoanRateQuote BestBankLoanRateQuote() {
+            var best = _bankLoanRateQuotes[0];
+            foreach (var bankLoanRateQuote in _bankLoanRateQuotes) {
+                if (best .InterestRate > bankLoanRateQuote.InterestRate) {
+                    best = bankLoanRateQuote;
+                }
+            }
+            return best;
         }
     }
 }
