@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Akka.Actor;
 using Akka.Event;
+using Newtonsoft.Json;
 
 namespace AkkaProcessManager {
 
-    class QuoteBestLoanRate {
+    public class QuoteBestLoanRate {
         public string TaxId { get; private set; }
         public int Amount { get; private set; }
         public int TermInMonths { get; private set; }
@@ -17,7 +18,7 @@ namespace AkkaProcessManager {
         }
     }
 
-    class BestLoanRateQuoted {
+    public class BestLoanRateQuoted {
         public string BankId { get; private set; }
         public string LoanRateQuoteId { get; private set; }
         public string TaxId { get; private set; }
@@ -88,7 +89,8 @@ namespace AkkaProcessManager {
         }
 
         private void BankLoanRateQuotedHandler(BankLoanRateQuoted message) {
-            _logger.Info("LoanBroker recieved BankLoanRateQuoted message for bankId: {0}", message.BankId);
+            _logger.Info("LoanBroker received BankLoanRateQuoted message:\n{0}",
+                JsonConvert.SerializeObject(message));
             ProcessOf(message.LoanQuoteReferenceId).Tell(
                 new RecordLoanRateQuote(message.BankId,
                     message.BankLoanRateQuoteId,
@@ -96,7 +98,8 @@ namespace AkkaProcessManager {
         }
 
         private void CreditCheckedHandler(CreditChecked message) {
-            _logger.Info("LoanBroker recieved CreditChecked message for creditProcessingReferenceId: {0}", message.CreditProcessingReferenceId);
+            _logger.Info("LoanBroker recieved CreditChecked message:\n{0}",
+                JsonConvert.SerializeObject(message));
             ProcessOf(message.CreditProcessingReferenceId).Tell(
                 new EstablishCreditScoreForLoanRateQuote(message.CreditProcessingReferenceId,
                     message.TaxId,
@@ -104,7 +107,8 @@ namespace AkkaProcessManager {
         }
 
         private void CreditScoreForLoanRateQuoteDeniedHandler(CreditScoreForLoanRateQuoteDenied message) {
-            _logger.Info("LoanBroker recieved CreditScoreForLoanRateQuoteDenied message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved CreditScoreForLoanRateQuoteDenied message:\n{0}",
+                JsonConvert.SerializeObject(message));
             ProcessOf(message.LoanRateQuoteId).Tell(
                 new TerminateLoanRateQuote());
             var denied = new BestLoanRateDenied(
@@ -113,11 +117,13 @@ namespace AkkaProcessManager {
                 message.Amount,
                 message.TermInMonths,
                 message.Score);
-            _logger.Info("Would be sent to original requester loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("Would be sent to original requester:\n{0}",
+                JsonConvert.SerializeObject(denied));
         }
 
         private void CreditScoreForLoanRateQuoteEstablishedHandler(CreditScoreForLoanRateQuoteEstablished message) {
-            _logger.Info("LoanBroker recieved CreditScoreForLoanRateQuoteEstablished message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved CreditScoreForLoanRateQuoteEstablished message:\n{0}",
+                JsonConvert.SerializeObject(message));
             foreach (var bank in _banks) {
                 bank.Tell(
                     new QuoteLoanRate(message.LoanRateQuoteId,
@@ -129,7 +135,8 @@ namespace AkkaProcessManager {
         }
 
         private void LoanRateBestQuoteFilledHandler(LoanRateBestQuoteFilled message) {
-            _logger.Info("LoanBroker recieved LoanRateBestQuoteFilled message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved LoanRateBestQuoteFilled message:\n{0}",
+                JsonConvert.SerializeObject(message));
             StopProcess(message.LoanRateQuoteId);
             var best = new BestLoanRateQuoted(
                 message.BestBankLoanRateQuote.BankId,
@@ -139,40 +146,45 @@ namespace AkkaProcessManager {
                 message.TermInMonths,
                 message.CreditScore,
                 message.BestBankLoanRateQuote.InterestRate);
-            _logger.Info("Would be sent to the original requester loanRateQuoteId: {0}", best.LoanRateQuoteId);
+            _logger.Info("Would be sent to the original requester:\n{0}",
+                JsonConvert.SerializeObject(best));
         }
 
         private void LoanRateQuoteRecordedHandler(LoanRateQuoteRecorded message) {
-            _logger.Info("LoanBroker recieved LoanRateQuoteRecorded message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved LoanRateQuoteRecorded message:\n{0}",
+                JsonConvert.SerializeObject(message));
 
             // Other processing
         }
 
         private void LoanRateQuoteStartedHandler(LoanRateQuoteStarted message) {
-            _logger.Info("LoanBroker recieved LoanRateQuoteStarted message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved LoanRateQuoteStarted message:\n{0}",
+                JsonConvert.SerializeObject(message));
             _creditBureau.Tell(new CheckCredit(
                 message.LoanRateQuoteId,
                 message.TaxId));
         }
 
         private void LoanRateQuoteTerminatedHandler(LoanRateQuoteTerminated message) {
-            _logger.Info("LoanBroker recieved LoanRateQuoteTerminated message for loanRateQuoteId: {0}", message.LoanRateQuoteId);
+            _logger.Info("LoanBroker recieved LoanRateQuoteTerminated message:\n{0}",
+                JsonConvert.SerializeObject(message));
             StopProcess(message.LoanRateQuoteId);
         }
 
         private void ProcessStartedHandler(ProcessStarted message) {
-            _logger.Info("LoanBroker recieved ProcessStarted message");
+            _logger.Info("LoanBroker recieved ProcessStarted message for ProcessId: {0}", message.ProcessId);
             message.Process.Tell(new StartLoanRateQuote(_banks.Count));
         }
 
         private void ProcessStoppedHandler(ProcessStopped message) {
-            _logger.Info("LoanBroker recieved ProcessStopped message");
+            _logger.Info("LoanBroker recieved ProcessStopped message for ProcessId: {0}", message.ProcessId);
             Context.Stop(message.Process);
         }
 
         private void QuoteBestLoanRateHandler(QuoteBestLoanRate message) {
             var loanRateQuoteId = Guid.NewGuid().ToString();
-            _logger.Info("Starting: " + message + " for Id: " + loanRateQuoteId);
+            _logger.Info("Starting QuoteBestLoanRate:\n{0}",
+                JsonConvert.SerializeObject(message));
             IActorRef loanRateQuote = Context.ActorOf(
                 Props.Create(() => new LoanRateQuote(
                     loanRateQuoteId,

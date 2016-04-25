@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
+using Newtonsoft.Json;
 
 namespace AkkaProcessManager {
     public class CheckCredit {
@@ -42,9 +43,10 @@ namespace AkkaProcessManager {
         }
 
         public void CheckCreditHandler(CheckCredit message) {
-            _logger.Info("CreditBureau recieved CheckCredit message: " + message);
+            _logger.Info("CreditBureau recieved CheckCredit message:\n{0}", 
+                JsonConvert.SerializeObject(message));
             int range = _creditRanges[_randomCreditRangeGenerator.Next(5)];
-            int score = _randomCreditScoreGenerator.Next(20);
+            int score = range + _randomCreditScoreGenerator.Next(20);
             CreditChecked crediChecked =
                 new CreditChecked(
                     message.CreditProcessReferenceId,

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Schema;
 using Akka.Actor;
+using Akka.Event;
+using Newtonsoft.Json;
 
 namespace AkkaProcessManager {
 
+    #region Messages
     public class StartLoanRateQuote {
         public int ExpectedLoanRateQuotes { get; private set; }
 
@@ -132,7 +135,9 @@ namespace AkkaProcessManager {
             InterestRate = interestRate;
         }
     }
+    #endregion
 
+    #region Actor
     public class LoanRateQuote : ReceiveActor {
         private IList<BankLoanRateQuote> _bankLoanRateQuotes = new List<BankLoanRateQuote>();
         private int _creditRatingScore;
@@ -143,6 +148,8 @@ namespace AkkaProcessManager {
         private string _loanRateQuoteId;
         private string _taxId;
         private int _termInMonths;
+
+        private readonly ILoggingAdapter _logger = Context.GetLogger();
 
         public LoanRateQuote(string loanRateQuoteId, string taxId, int amount, int termInMonths, IActorRef loanBroker) {
             this._loanRateQuoteId = loanRateQuoteId;
@@ -160,6 +167,8 @@ namespace AkkaProcessManager {
         }
 
         private void StartLoanRateQuoteHandler(StartLoanRateQuote message) {
+            _logger.Info("LoanRateQuote received StartLonaRateQuote message:\n{0}",
+                JsonConvert.SerializeObject(message));
             _expectedLoanRateQuotes = message.ExpectedLoanRateQuotes;
             _loanBroker.Tell(
                 new LoanRateQuoteStarted(
@@ -168,6 +177,8 @@ namespace AkkaProcessManager {
         }
 
         private void EstablishCreditScoreForLoanRateQuoteHandler(EstablishCreditScoreForLoanRateQuote message) {
+            _logger.Info("LoanRateQuote received EstablishCreditScoreForLoanRateQuote message:\n{0}",
+                JsonConvert.SerializeObject(message));
             _creditRatingScore = message.Score;
             if (QuotableCreditScore(_creditRatingScore)) {
                 _loanBroker.Tell(
@@ -183,13 +194,15 @@ namespace AkkaProcessManager {
                     new CreditScoreForLoanRateQuoteDenied(
                         _loanRateQuoteId,
                         _taxId,
+                        _creditRatingScore,
                         _amount,
-                        _termInMonths,
-                        _creditRatingScore));
+                        _termInMonths));
             }
         }
 
         private void RecordLoanRateQuoteHandler(RecordLoanRateQuote message) {
+            _logger.Info("LoanRateQuote received RecordLoanRateQuote message:\n{0}",
+                JsonConvert.SerializeObject(message));
             var bankLoanRateQuote = 
                 new BankLoanRateQuote(
                     message.BankId,
@@ -227,4 +240,5 @@ namespace AkkaProcessManager {
             return best;
         }
     }
+    #endregion
 }

@@ -1,5 +1,7 @@
 using System;
 using Akka.Actor;
+using Akka.Event;
+using Newtonsoft.Json;
 
 namespace AkkaProcessManager {
 
@@ -42,6 +44,8 @@ namespace AkkaProcessManager {
         private Random _randomQuoteId = new Random();
         public Random _randomDiscount = new Random();
 
+        private readonly ILoggingAdapter _logger = Context.GetLogger();
+
         public Bank(string bankId, double primeRate, double ratePremium) {
             _bankId = bankId;
             _primeRate = primeRate;
@@ -52,6 +56,9 @@ namespace AkkaProcessManager {
         }
 
         private void QuoteLoanRateHandler(QuoteLoanRate message) {
+            _logger.Info("Bank: {0} recieved QuoteLoanRate message:\n{1}",
+                _bankId,
+                JsonConvert.SerializeObject(message));
             var interestRate =
                 CalculateInterestRate(
                     (double) message.Amount,
