@@ -233,7 +233,7 @@ namespace AkkaProcessManager {
         private BankLoanRateQuote BestBankLoanRateQuote() {
             var best = _bankLoanRateQuotes[0];
             foreach (var bankLoanRateQuote in _bankLoanRateQuotes) {
-                if (best .InterestRate > bankLoanRateQuote.InterestRate) {
+                if (best.InterestRate > bankLoanRateQuote.InterestRate) {
                     best = bankLoanRateQuote;
                 }
             }
